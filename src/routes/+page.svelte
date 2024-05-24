@@ -1,18 +1,30 @@
-<h1>Your Library</h1>
+<div class="m-6">
+  <h1 class="text-2xl">Your Library</h1>
+  <div class="border-[1px] bg-gray-100 my-2"></div>
 
-<div class="flex flex-col gap-2 my-4">
-  <div class="flex gap-1">
-    <img src="/images/plus.svg" alt="">
-    <button>Link new tab</button>
-  </div>
+  <div class="flex gap-2 my-4">
+    <a href="/add-linked-tab" class="border bg-[#3C5B6F] text-white px-4 py-1.5 rounded-md flex items-center gap-1 w-fit">
+      <img src="/images/plus.svg" alt="">
+      <span>Link New Tab</span>
+    </a>
   
-  <div class="flex gap-1">
-    <img src="/images/plus.svg" alt="">
-    <button>Upload PDF Tab</button>
-  </div>
+    <button class="border bg-[#3C5B6F] text-white px-4 py-1.5 rounded-md flex items-center gap-1 w-fit">
+      <img src="/images/plus.svg" alt="">
+      <span>Upload PDF Tab</span>
+    </button>
   
-  <div class="flex gap-1">
-    <img src="/images/plus.svg" alt="">
-    <button>Upload Image Tab</button>
+    <button class="border bg-[#3C5B6F] text-white px-4 py-1.5 rounded-md flex items-center gap-1 w-fit">
+      <img src="/images/plus.svg" alt="">
+      <span>Upload Image Tab</span>
+    </button>
   </div>
+
+  <LinkedTabs />
+  <!-- <PDFTabs /> -->
 </div>
+
+<script>
+  import LinkedTabs from "$lib/components/LinkedTabs.svelte";
+  import PDFTabs from "$lib/components/PDFTabs.svelte"
+
+</script>
