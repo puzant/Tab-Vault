@@ -4,8 +4,6 @@
 		<a href="/about">About</a>
 		<a href="/settings">Settings</a>
 	</div>
-
-	<a href="/settings">Login</a>
 </nav>
 
 <slot></slot>

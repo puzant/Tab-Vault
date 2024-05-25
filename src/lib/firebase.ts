@@ -10,14 +10,14 @@ import {
 } from 'firebase/firestore';
 
 const firebaseConfig = {
-  apiKey: "AIzaSyA4SMyUbkaNgwr_fVF9feI-R9Io8ej-LwA",
-  authDomain: "guitar-tabs-library.firebaseapp.com",
-  databaseURL: "https://guitar-tabs-library-default-rtdb.firebaseio.com",
-  projectId: "guitar-tabs-library",
-  storageBucket: "guitar-tabs-library.appspot.com",
-  messagingSenderId: "610707297219",
-  appId: "1:610707297219:web:fb02464ab36b470b20e376",
-  measurementId: "G-ZP6MDLXMWK"
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  databaseURL: import.meta.env.VITE_FIREBASE_DATABASE_URL,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
 };
 
 initializeApp(firebaseConfig);

@@ -6,7 +6,7 @@
 
 
     {:else if linkedTabs.length > 0}
-      <div class="my-2 grid grid-cols-3 gap-2">
+      <div class="my-2 grid grid-cols-1 md:grid-cols-3 gap-2">
         {#each linkedTabs as tab, index (tab.id)}
           <div
             role="button"
@@ -21,7 +21,7 @@
             
             <div class:visible={hoverStates[index]} class="tab-options">
               <img on:click={() => editTabDialog = true} class="inline cursor-pointer" src="/images/pencil.svg" alt="">
-              <img on:click={() => confirmDeleteTab = true} class="inline cursor-pointer" src="/images/trash.svg" alt="">
+              <img on:click={() => toggleDeleteTabModal(tab.id)} class="inline cursor-pointer" src="/images/trash.svg" alt="">
             </div>
           </div>
         {/each}
@@ -32,17 +32,7 @@
 
   
   {#if confirmDeleteTab}
-    <div class="modal modal-open">
-      <div class="modal-box">
-        <h2 class="font-bold text-lg">Delete Linked Tab</h2>
-        <p class="py-4">Are you sure you want to delete this Linked Tab?.</p>
-        
-        <div class="modal-action">
-          <button class="btn btn-error" on:click={handleDeleteLinkedTab}><span class="text-white">Yes</span></button>
-          <button class="btn" on:click={() => confirmDeleteTab = false}>Close</button>
-        </div>
-      </div>
-    </div>
+   <DeleteLinkTabModal onClose={toggleDeleteTabModal} on:deleteEvent={toggleDeleteTabModal} selectedTab={selectedTab} />
   {/if}
 
   {#if editTabDialog}
@@ -72,8 +62,10 @@
 
 <script>
   import { onMount } from 'svelte';
-  import { getLinkedTabs, deleteLinkedTab, editLinkedTab } from "$lib/firebase";
+  import DeleteLinkTabModal from './DeleteLinkedTabModal.svelte'
+  import { getLinkedTabs, editLinkedTab } from "$lib/firebase";
 
+  let selectedTab = null
   let linkedTabs = [];
   let hoverStates = []
   let loading = true;
@@ -93,8 +85,9 @@
     }
   });
 
-  const handleDeleteLinkedTab = async (tabId) => {
-    const res = await deleteLinkedTab(tabId)
+  const toggleDeleteTabModal = (tabId) => {
+    selectedTab = tabId
+    confirmDeleteTab = !confirmDeleteTab
   }
 
   const handleEditLinkedTab = async (id, payload) => {
