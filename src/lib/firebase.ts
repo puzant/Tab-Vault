@@ -21,7 +21,8 @@ const firebaseConfig = {
 };
 
 initializeApp(firebaseConfig);
-const db = getFirestore()
+
+export const db = getFirestore()
 
 export const getLinkedTabs = async () => {
   const colRef = collection(db, 'linked-tabs');
@@ -43,14 +44,18 @@ export const addLinkedTab = async (tabName: string, tabUrl: string) => {
   }
 }
 
-export const editLinkedTab = async (id: string, payload: any) => {
-  updateDoc(doc(db, 'linked-tabs', id), payload)
+export const editLinkedTab = async (payload: any) => {
+  try {
+    await updateDoc(doc(db, 'linked-tabs', payload.id), payload)
+    return { success: true }
+  } catch(err) {
+    return { success: false }
+  }
 }
 
 export const deleteLinkedTab = async (id: string) => {
   try {
     await deleteDoc(doc(db, 'linked-tabs', id))
-
     return { success: true }
   } catch(err) {
     return { success: false, err }

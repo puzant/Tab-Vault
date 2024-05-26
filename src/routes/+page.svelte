@@ -1,4 +1,4 @@
-<div class="m-6">
+<div class="my-6 w-[60%] mx-auto">
   <h1 class="text-2xl">Your Library</h1>
   <div class="border-[1px] bg-gray-100 my-2"></div>
 
@@ -20,7 +20,6 @@
   </div>
 
   <LinkedTabs />
-  <!-- <PDFTabs /> -->
 </div>
 
 <script>

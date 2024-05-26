@@ -17,14 +17,61 @@
   {/if}
 
   <div class="my-4">
-    <div class="flex flex-col gap-2">
-      <span>Tab Name</span>
-      <input bind:value={name} type="text" placeholder="Name" class="input input-bordered w-full max-w-xs">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-5 w-full md:w-[70%]">
+      <div class="flex flex-col gap-2">
+        <span class="font-semibold">Tab Name:</span>
+        <input bind:value={name} type="text" placeholder="Name" class="input input-bordered">
+      </div>
+  
+      <div class="flex flex-col gap-2">
+        <span class="font-semibold">Composer:</span>
+        <input type="text" placeholder="Composer" class="input input-bordered ">
+      </div>
+
+      <div class="flex flex-col gap-2">
+        <span class="font-semibold">Style:</span>
+        <div class="dropdown">
+          <div tabindex="0" role="button" class="btn m-1 w-full">Style</div>
+          <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-full">
+            <li><a>Item 1</a></li>
+            <li><a>Item 2</a></li>
+          </ul>
+        </div>
+      </div>
+  
+      <div class="flex flex-col gap-2">
+        <span class="font-semibold">Tab URL:</span>
+        <input bind:value={url} type="text" placeholder="URL" class="input input-bordered">
+      </div>
+  
+      <div class="flex flex-col gap-2">
+        <span class="font-semibold">Difficulty:</span>
+
+        <div class="dropdown">
+          <div tabindex="0" role="button" class="btn m-1 w-full">Difficulty</div>
+          <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-full">
+            <li><a>Item 1</a></li>
+            <li><a>Item 2</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="flex flex-col gap-2">
+        <span class="font-bold">Priority:</span>
+
+        <div class="dropdown">
+          <div tabindex="0" role="button" class="btn m-1 w-full">Priority</div>
+          <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-full">
+            <li><a>Item 1</a></li>
+            <li><a>Item 2</a></li>
+          </ul>
+        </div>
+      </div>
     </div>
 
-    <div class="flex flex-col my-4 gap-2">
-      <span>Tab URL</span>
-      <input bind:value={url} type="text" placeholder="URL" class="input input-bordered w-full max-w-xs">
+    <div class="flex items-center gap-2 my-4">
+      <span>With Capo:</span>
+      <input type="checkbox" class="toggle toggle-info toggle-md" checked />
     </div>
 
     <button on:click={handleSave} class="my-4 border bg-[#3C5B6F] text-white px-4 py-1.5 rounded-md flex items-center gap-1 w-fit">

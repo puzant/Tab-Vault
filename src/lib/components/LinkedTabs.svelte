@@ -1,9 +1,16 @@
-<div>
-  <h1 class="text-xl">Linked Tabs</h1>
+<div class="">
+  <div class=" flex justify-between">
+    <h1 class="text-xl">Linked Tabs ({linkedTabs.length})</h1>
+    
+    <div class="flex gap-2 items-center">
+      <img class="w-6 cursor-pointer" src="/images/filter.svg" alt="">
+      <img class="w-6 cursor-pointer" src="/images/sort.svg" alt="">
+    </div> 
+  </div>
 
+  
   {#if loading}
     <span class="loading loading-dots loading-lg"></span>
-
 
     {:else if linkedTabs.length > 0}
       <div class="my-2 grid grid-cols-1 md:grid-cols-3 gap-2">
@@ -20,7 +27,7 @@
             <a href={tab.url} target="_blank">{tab.name}</a>
             
             <div class:visible={hoverStates[index]} class="tab-options">
-              <img on:click={() => editTabDialog = true} class="inline cursor-pointer" src="/images/pencil.svg" alt="">
+              <img on:click={() => toggleEditTabModal(tab)} class="inline cursor-pointer" src="/images/pencil.svg" alt="">
               <img on:click={() => toggleDeleteTabModal(tab.id)} class="inline cursor-pointer" src="/images/trash.svg" alt="">
             </div>
           </div>
@@ -32,38 +39,29 @@
 
   
   {#if confirmDeleteTab}
-   <DeleteLinkTabModal onClose={toggleDeleteTabModal} on:deleteEvent={toggleDeleteTabModal} selectedTab={selectedTab} />
+   <DeleteLinkTabModal 
+      onClose={toggleDeleteTabModal} 
+      selectedTab={selectedTab} 
+      on:deleteEvent={toggleDeleteTabModal} 
+    />
   {/if}
 
   {#if editTabDialog}
-    <div class="modal modal-open">
-      <div class="modal-box">
-        <h2 class="font-bold text-lg">Edit Linked Tab</h2>
-    
-        <div class="flex flex-col gap-2 my-2">
-          <span>Name</span>
-          <input type="text" placeholder="Name" class="input input-bordered w-full">
-        </div>
-
-        <div class="flex flex-col gap-2">
-          <span>URL</span>
-          <input type="text" placeholder="Name" class="input input-bordered w-full">
-        </div>
-
-        <div class="modal-action">
-          <button class="btn btn-primary" on:click={handleEditLinkedTab}><span class="text-white">Save</span></button>
-          <button class="btn" on:click={() => editTabDialog = false}>Close</button>
-        </div>
-      </div>
-    </div>
+    <EditLinkedTabModal 
+      onClose={toggleEditTabModal}
+      selectedTab={selectedTab} 
+      on:editEvent={toggleEditTabModal}
+    />
   {/if}
 
 </div>
 
 <script>
   import { onMount } from 'svelte';
+  import { onSnapshot, collection } from 'firebase/firestore';
   import DeleteLinkTabModal from './DeleteLinkedTabModal.svelte'
-  import { getLinkedTabs, editLinkedTab } from "$lib/firebase";
+  import EditLinkedTabModal from './EditLinkedTabModal.svelte'
+  import { getLinkedTabs, db } from "$lib/firebase";
 
   let selectedTab = null
   let linkedTabs = [];
@@ -77,9 +75,16 @@
     try {
       linkedTabs = await getLinkedTabs();
       hoverStates = linkedTabs.map(() => false);
+      const colRef = collection(db, 'linked-tabs');
+
+      const unsubscribe = onSnapshot(colRef, (snapshot) => {
+        linkedTabs = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        hoverStates = linkedTabs.map(() => false);
+      });
+      
+      return () => unsubscribe();
     } catch (err) {
       error = 'Failed to fetch linked tabs';
-      console.error(err);
     } finally {
       loading = false;
     }
@@ -90,8 +95,9 @@
     confirmDeleteTab = !confirmDeleteTab
   }
 
-  const handleEditLinkedTab = async (id, payload) => {
-    const res = await editLinkedTab(id, payload)
+  const toggleEditTabModal = (tab) => {
+    selectedTab = tab
+    editTabDialog = !editTabDialog
   }
 
   const handleMouseEnter = (index) => {

@@ -18,7 +18,6 @@
   export let onClose
   const dispatch = createEventDispatcher();
 
-
   const handleDeleteLinkedTab = async () => {
     const res = await deleteLinkedTab(selectedTab)
     if (res.success) {
