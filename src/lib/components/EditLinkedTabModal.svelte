@@ -15,7 +15,7 @@
 
       <div class="flex flex-col gap-2">
         <span class="font-semibold">Composer:</span>
-        <input type="text" placeholder="Composer" class="input input-bordered ">
+        <input bind:value={composer} type="text" placeholder="Composer" class="input input-bordered ">
       </div>
 
       <div class="flex flex-col gap-2">
@@ -78,13 +78,22 @@
 
   let name = selectedTab.name
   let url = selectedTab.url
+  let composer = selectedTab.composer
+  let priority = selectedTab.priority
+  let style = selectedTab.style
+  let difficulty = selectedTab.difficulty
 
   const handleEditLinkedTab = async () => {
     let payload = {
       name: name,
       url: url,
-      id: selectedTab.id
+      id: selectedTab.id,
+      composer: composer,
+      priority: priority,
+      style: style,
+      difficulty: difficulty
     }
+
     const res = await editLinkedTab(payload)
     if (res.success) {
       dispatch('editEvent', { message: 'Linked Tab Edited successfully' });

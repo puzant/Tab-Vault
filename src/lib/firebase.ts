@@ -1,4 +1,3 @@
-import { initializeApp } from "firebase/app";
 import { 
   getFirestore, 
   getDocs, 
@@ -8,6 +7,7 @@ import {
   collection, 
   doc 
 } from 'firebase/firestore';
+import { initializeApp } from "firebase/app";
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -31,12 +31,9 @@ export const getLinkedTabs = async () => {
   return snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
 }
 
-export const addLinkedTab = async (tabName: string, tabUrl: string) => {
+export const addLinkedTab = async (payload) => {
   try {
-    await addDoc(collection(db, 'linked-tabs'), {
-      name: tabName,
-      url: tabUrl
-    })
+    await addDoc(collection(db, 'linked-tabs'), payload)
 
     return { success: true }
   } catch(err) {

@@ -86,8 +86,14 @@
   import { isValidURL } from '$lib'
   import { addLinkedTab } from "$lib/firebase";
 
+  //  tab data
   let name = ''
   let url = ''
+  let composer = ''
+  let style = ''
+  let difficulty = ''
+  let priority = ''
+  let with_capo = false
 
   let loading = false
   let successMessage = ''
@@ -95,7 +101,17 @@
 
   const handleSave = async () => {
     loading = true
-    const res = await addLinkedTab(name, url)
+    const payload = {
+      name: name,
+      url: url,
+      composer: composer,
+      style: style,
+      difficulty: difficulty,
+      priority: priority,
+      with_capo: with_capo
+    }
+
+    const res = await addLinkedTab(payload)
     
     if (res.success) successMessage = 'Tab added successfully!';
     else errorMessage = 'Failed to add tab'
