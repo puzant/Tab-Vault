@@ -17,74 +17,81 @@
   {/if}
 
   <div class="my-4">
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-5 w-full md:w-[70%]">
-      <div class="flex flex-col gap-2">
-        <span class="font-semibold">Tab Name:</span>
-        <input bind:value={name} type="text" placeholder="Name" class="input input-bordered">
-      </div>
+    <form on:submit={handleSave}>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5 w-full md:w-[70%]">
+        <div class="flex flex-col gap-2">
+          <span class="font-semibold">Tab Name:</span>
+          <input bind:value={name} type="text" placeholder="Name" class="input input-bordered">
+          {#if tabNameError}<span class="text-red-500 font-semibold">{tabNameError}</span>{/if}
+        </div>
+    
+        <div class="flex flex-col gap-2">
+          <span class="font-semibold">Tab URL:</span>
+          <input bind:value={url} type="text" placeholder="URL" class="input input-bordered">
+          {#if tabURLError}<span class="text-red-500 font-semibold">{tabURLError}</span>{/if}
+        </div>
   
-      <div class="flex flex-col gap-2">
-        <span class="font-semibold">Composer:</span>
-        <input type="text" placeholder="Composer" class="input input-bordered ">
-      </div>
-
-      <div class="flex flex-col gap-2">
-        <span class="font-semibold">Style:</span>
-        <div class="dropdown">
-          <div tabindex="0" role="button" class="btn m-1 w-full">Style</div>
-          <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-full">
-            <li><a>Item 1</a></li>
-            <li><a>Item 2</a></li>
-          </ul>
+        <div class="flex flex-col gap-2">
+          <span class="font-semibold">Style:</span>
+          <div class="dropdown">
+            <div tabindex="0" role="button" class="btn m-1 w-full">{style || "Choose a style"}</div>
+            <ul class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-full">
+              {#each stylesList as s}
+              <li on:click={() => style = s}><a href="">{s}</a></li>
+              {/each}
+            </ul>
+          </div>
+        </div>
+    
+        <div class="flex flex-col gap-2">
+          <span class="font-semibold">Composer:</span>
+          <input bind:value={composer} type="text" placeholder="Composer" class="input input-bordered ">
+        </div>
+    
+        <div class="flex flex-col gap-2">
+          <span class="font-semibold">Difficulty:</span>
+  
+          <div class="dropdown">
+            <div tabindex="0" role="button" class="btn m-1 w-full">{difficulty || "Choose a difficulty"}</div>
+            <ul class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-full">
+              {#each difficultiesList as d}
+              <li on:click={() => difficulty = d}><a href="">{d}</a></li>
+              {/each}
+            </ul>
+          </div>
+        </div>
+  
+        <div class="flex flex-col gap-2">
+          <span class="font-bold">Priority:</span>
+  
+          <div class="dropdown">
+            <div tabindex="0" role="button" class="btn m-1 w-full">{priority || "Choose a priority"}</div>
+            <ul class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-full">
+              {#each prioritiesList as p}
+                <li on:click={() => priority = p}><a href="">{p}</a></li>
+              {/each}
+            </ul>
+          </div>
         </div>
       </div>
   
-      <div class="flex flex-col gap-2">
-        <span class="font-semibold">Tab URL:</span>
-        <input bind:value={url} type="text" placeholder="URL" class="input input-bordered">
+      <div class="flex items-center gap-2 my-4">
+        <span>With Capo:</span>
+        <input bind:checked={with_capo} type="checkbox" class="toggle toggle-info toggle-md" />
       </div>
   
-      <div class="flex flex-col gap-2">
-        <span class="font-semibold">Difficulty:</span>
-
-        <div class="dropdown">
-          <div tabindex="0" role="button" class="btn m-1 w-full">Difficulty</div>
-          <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-full">
-            <li><a>Item 1</a></li>
-            <li><a>Item 2</a></li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="flex flex-col gap-2">
-        <span class="font-bold">Priority:</span>
-
-        <div class="dropdown">
-          <div tabindex="0" role="button" class="btn m-1 w-full">Priority</div>
-          <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-full">
-            <li><a>Item 1</a></li>
-            <li><a>Item 2</a></li>
-          </ul>
-        </div>
-      </div>
-    </div>
-
-    <div class="flex items-center gap-2 my-4">
-      <span>With Capo:</span>
-      <input type="checkbox" class="toggle toggle-info toggle-md" checked />
-    </div>
-
-    <button on:click={handleSave} class="my-4 border bg-[#3C5B6F] text-white px-4 py-1.5 rounded-md flex items-center gap-1 w-fit">
-      <img src="/images/plus.svg" alt="">
-      <span>{loading ? 'Saving...' : 'Save'}</span>
-    </button>
+      <button class="my-4 border bg-[#3C5B6F] text-white px-4 py-1.5 rounded-md flex items-center gap-1 w-fit">
+        <img src="/images/plus.svg" alt="">
+        <span>{loading ? 'Saving...' : 'Save'}</span>
+      </button>
+    </form>
   </div>
 
 </div>
 
-<script>
-  import { isValidURL } from '$lib'
-  import { addLinkedTab } from "$lib/firebase";
+<script lang="ts">
+import { isValidUrl, prioritiesList, difficultiesList, stylesList } from "$lib" 
+import { addLinkedTab  } from "$lib/firebase";
 
   //  tab data
   let name = ''
@@ -99,26 +106,55 @@
   let successMessage = ''
   let errorMessage = ''
 
-  const handleSave = async () => {
-    loading = true
-    const payload = {
-      name: name,
-      url: url,
-      composer: composer,
-      style: style,
-      difficulty: difficulty,
-      priority: priority,
-      with_capo: with_capo
+  let tabNameError = ''
+  let tabURLError = ''
+
+  const validateTabName = () => {
+    tabNameError = !name.length ? "Tab name can't be empty" : ""
+  }
+
+  const validateTabUrl = () => {
+    if (!url.length) {
+      tabURLError = "Tab URL can't be empty";
+    } else if (!isValidUrl(url)) {
+      tabURLError = "Please enter a valid URL";
+    } else {
+      tabURLError = '';
     }
+  };
 
-    const res = await addLinkedTab(payload)
+  const handleSave = async (e) => {
+    e.preventDefault()
+    validateTabName()
+    validateTabUrl()
+
+    if (!tabNameError && !tabURLError) {
+      loading = true
+
+      const payload = {
+        name: name,
+        url: url,
+        composer: composer,
+        style: style,
+        difficulty: difficulty,
+        priority: priority,
+        with_capo: with_capo
+      }
+
+      const res = await addLinkedTab(payload)
     
-    if (res.success) successMessage = 'Tab added successfully!';
-    else errorMessage = 'Failed to add tab'
+      if (res.success) successMessage = 'Tab Added Successfully!';
+      else errorMessage = 'Failed to add tab'
 
-    loading = false
-    name = ''
-    url = ''
+      loading = false
+      name = ''
+      url = ''
+      composer = ''
+      style = ''
+      difficulty = ''
+      priority = ''
+      with_capo = false
+    }
   }
 
 </script>
