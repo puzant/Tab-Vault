@@ -62,7 +62,7 @@
         </div>
   
         <div class="flex flex-col gap-2">
-          <span class="font-bold">Priority:</span>
+          <span class="font-semibold">Priority:</span>
   
           <div class="dropdown">
             <div tabindex="0" role="button" class="btn m-1 w-full">{priority || "Choose a priority"}</div>
@@ -90,7 +90,7 @@
 </div>
 
 <script lang="ts">
-import { isValidUrl, prioritiesList, difficultiesList, stylesList } from "$lib" 
+import { isValidUrl, prioritiesList, difficultiesList, stylesList } from "$lib"
 import { addLinkedTab  } from "$lib/firebase";
 
   //  tab data

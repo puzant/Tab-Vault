@@ -9,6 +9,13 @@ const isValidUrl = (urlString: string) => {
   return !!urlPattern.test(urlString);
 }
 
+const filtersList = [
+  {name: 'Style', value: 'style'},
+  {name: 'Difficulty', value: 'difficulty'},
+  {name: 'With Capo', value: 'with_capo'},
+  {name: 'Priority', value: 'priority'},
+]
+
 const prioritiesList = [
   'Low',
   'Mediun',
@@ -46,5 +53,5 @@ const stylesList = [
 ]
 
 export {
-  prioritiesList, difficultiesList, stylesList, isValidUrl
+  prioritiesList, difficultiesList, stylesList, isValidUrl, filtersList
 }
