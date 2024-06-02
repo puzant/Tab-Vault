@@ -90,7 +90,7 @@
   import { filtersList } from '$lib';
   import { onMount } from 'svelte';
   import { writable } from 'svelte/store'
-  import { onSnapshot, collection } from 'firebase/firestore';
+  import { onSnapshot, collection, query, where } from 'firebase/firestore';
   import { getLinkedTabs, db } from "$lib/firebase";
   import DeleteLinkTabModal from './DeleteLinkedTabModal.svelte'
   import EditLinkedTabModal from './EditLinkedTabModal.svelte'
@@ -126,7 +126,6 @@
   });
 
   const addFilter = (filter) => {
-    console.log(filter)
     filters.update(currentFilters => {
       if (!currentFilters.includes(filter)) {
         return [...currentFilters, filter]

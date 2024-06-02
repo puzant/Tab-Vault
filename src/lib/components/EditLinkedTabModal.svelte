@@ -90,7 +90,7 @@
   let priority = selectedTab.priority
   let style = selectedTab.style
   let difficulty = selectedTab.difficulty
-  let with_capo = false
+  let with_capo = selectedTab.with_capo
 
   let tabNameError = ""
   let tabURLError = ""
