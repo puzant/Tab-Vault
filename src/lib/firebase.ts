@@ -5,9 +5,13 @@ import {
   updateDoc, 
   deleteDoc,
   collection, 
-  doc 
+  doc, 
+  query,
+  where
 } from 'firebase/firestore';
 import { initializeApp } from "firebase/app";
+import { filtersStore } from './filtersStore';
+import { get } from 'svelte/store';
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -21,12 +25,23 @@ const firebaseConfig = {
 };
 
 initializeApp(firebaseConfig);
-
 export const db = getFirestore()
 
+export const queryBuilder = () => {
+  const colRef = collection(db, 'linked-tabs')
+  const filters = get(filtersStore)
+  let q = query(colRef)
+
+  if (filters.withCapo) q = query(q, where('with_capo', '==', filters.withCapo))
+  if (filters.difficulty) q = query(q, where('difficulty', '==', filters.difficulty))
+  if (filters.styles && filters.styles.length > 0) q = query(q, where('style', 'array-contains-any', filters.styles))
+
+  return q
+}
+
 export const getLinkedTabs = async () => {
-  const colRef = collection(db, 'linked-tabs');
-  const snapshot = await getDocs(colRef);
+  const q = queryBuilder()
+  const snapshot = await getDocs(q);
 
   return snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
 }

@@ -1,38 +1,5 @@
-<div class="">
-  <div class=" flex justify-between">
-    <h1 class="text-xl">Linked Tabs ({linkedTabs.length})</h1>
-    
-    <div class="flex gap-2 items-center">
-      <div class="dropdown">
-        <div tabindex="0" role="button" class="btn btn-sm m-1">
-          <img class="w-6 cursor-pointer" src="/images/filter.svg" alt="">
-        </div>
-        <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
-          {#each filtersList as filter}
-            <li on:click={() => addFilter(filter)}><a>{filter.name}</a></li>
-          {/each}
-        </ul>
-      </div>
-      
-      <div class="dropdown">
-        <div tabindex="0" role="button" class="btn btn-sm m-1">
-          <img class="w-6 cursor-pointer" src="/images/sort.svg" alt="">
-        </div>
-        <ul class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
-          <li><a>Name</a></li>
-        </ul>
-      </div>
-    </div> 
-  </div>
-
-  <div class="flex gap-2">
-    {#each $filters as filter}
-      <div class="cursor-pointer badge badge-neutral badge-lg gap-2">
-        <svg on:click={() => removeFilter(filter)} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block w-4 h-4 stroke-current"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-        {filter.name}
-      </div>
-    {/each}
-  </div>
+<div>
+  <h1 class="text-xl">Linked Tabs ({linkedTabs.length})</h1>
 
   <label class="input input-sm input-bordered flex items-center gap-2 my-3">
     <input bind:value={searchValue} type="text" class="grow" placeholder="Search Tabs" />
@@ -87,57 +54,49 @@
 </div>
 
 <script lang="ts">
-  import { filtersList } from '$lib';
   import { onMount } from 'svelte';
-  import { writable } from 'svelte/store'
-  import { onSnapshot, collection, query, where } from 'firebase/firestore';
-  import { getLinkedTabs, db } from "$lib/firebase";
+  import { get } from 'svelte/store'
+  import { filtersStore } from '$lib/filtersStore'
+  import { onSnapshot } from 'firebase/firestore';
+  import { queryBuilder, getLinkedTabs } from "$lib/firebase";
   import DeleteLinkTabModal from './DeleteLinkedTabModal.svelte'
   import EditLinkedTabModal from './EditLinkedTabModal.svelte'
+
 
   let selectedTab = null
   let linkedTabs: any = [];
   let hoverStates: boolean[] = []
-  const filters = writable([])
   
   let loading = true;
   let error = null;
-  let confirmDeleteTab = false
+  let confirmDeleteTab = false  
   let editTabDialog = false
   let searchValue = ''
 
-  onMount(async () => {
+  const loadTabs = async () => {
     try {
       linkedTabs = await getLinkedTabs();
-      hoverStates = linkedTabs.map(() => false);
-      const colRef = collection(db, 'linked-tabs');
-
-      const unsubscribe = onSnapshot(colRef, (snapshot) => {
-        linkedTabs = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        hoverStates = linkedTabs.map(() => false);
-      });
-      
-      return () => unsubscribe();
-    } catch (err) {
+      hoverStates = linkedTabs.map(() => false);      
+    } catch(err) {
       error = 'Failed to fetch linked tabs';
     } finally {
       loading = false;
     }
-  });
-
-  const addFilter = (filter) => {
-    filters.update(currentFilters => {
-      if (!currentFilters.includes(filter)) {
-        return [...currentFilters, filter]
-      }
-      return currentFilters
-    })
   }
 
-  const removeFilter = (filterToRemove) => {
-    filters.update(currentFilters => {
-      return currentFilters.filter(filter => filter !== filterToRemove)
-    })
+  onMount(() => {
+    loadTabs();
+
+    const unsubscribe = onSnapshot(queryBuilder(), (snapshot) => {
+      linkedTabs = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      hoverStates = linkedTabs.map(() => false);
+    });
+
+    return () => unsubscribe();
+  });
+
+  $: {
+    if ($filtersStore) loadTabs();
   }
 
   const toggleDeleteTabModal = (tabId: string) => {
@@ -162,7 +121,7 @@
 <style>
   .tab-options {
     opacity: 0;
-     transition: opacity ease 0.3s;
+    transition: opacity ease 0.3s;
   }
 
   .tab-options.visible {
