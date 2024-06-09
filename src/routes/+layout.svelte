@@ -1,14 +1,22 @@
-<nav class="bg-[#153448] text-white p-4 flex justify-between">
+<nav class="bg-[#153448] text-white p-4 flex justify-between items-center">
+	<h1 class="text-2xl">Tab Vault</h1>
 	<div class="flex gap-8">
 		<a href="/">Home</a>
+		<a href="/">Chords</a>
+		<a href="/">Tuteriols</a>
+		<div class="avatar placeholder">
+			<div class="bg-indigo-500 text-neutral-content rounded-full w-7">
+				<span class="text-xl">P</span>
+			</div>
+		</div> 
 	</div>
 </nav>
 	
 <div class="grid grid-cols-12 w-[90%] mx-auto">
 	<div class="col-span-2 border p-3">
 		<div class="flex flex-col gap-2">
-			<button class="btn btn-sm btn-neutral">Sign Up</button>
-			<button class="btn btn-sm btn-outline">Log IN</button>
+			<a href="/signup" class="btn btn-sm btn-neutral">Sign Up</a>
+			<a href="/login" class="btn btn-sm btn-outline">Log In</a>
 		</div>
 
 		<div class="divider"></div>
@@ -53,7 +61,7 @@
 					<span 
 						on:click={() => updateStylesFilter(style)} 
 						class={clsx("badge badge-primary badge-sm badge-outline cursor-pointer p-3", {
-							'selected': $filtersStore.styles.includes(style)
+							'selected': $filtersStore.styles === style
 						})}
 						>
 						{style}
@@ -90,13 +98,9 @@
 
 	const updateStylesFilter = (style) => {
 		filtersStore.update(filters => {
-			if (filters.styles.includes(style)) {
-				filters.styles = filters.styles.filter(s => s !== style)
-			} else {
-				filters.styles = [...filters.styles, style]
-			}
-			return filters
-		})
+    filters.styles = filters.styles === style ? null : style;
+    return filters;
+  });
 	}
 
 </script>

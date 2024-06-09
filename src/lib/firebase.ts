@@ -1,14 +1,5 @@
-import { 
-  getFirestore, 
-  getDocs, 
-  addDoc, 
-  updateDoc, 
-  deleteDoc,
-  collection, 
-  doc, 
-  query,
-  where
-} from 'firebase/firestore';
+import { getFirestore, getDocs, addDoc, updateDoc, deleteDoc,collection, doc, query,where} from 'firebase/firestore';
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'firebase/auth';
 import { initializeApp } from "firebase/app";
 import { filtersStore } from './filtersStore';
 import { get } from 'svelte/store';
@@ -24,8 +15,27 @@ const firebaseConfig = {
   measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
 };
 
-initializeApp(firebaseConfig);
+const app = initializeApp(firebaseConfig);
+export const auth = getAuth(app)
 export const db = getFirestore()
+
+export const signUp = async (email: string, passwrod: string) => {
+  try {
+    const userCredential = await createUserWithEmailAndPassword(auth, email, passwrod)
+    return userCredential.user
+  } catch (err) {
+    throw err
+  }
+}
+
+export const login = async (email: string, passwrod: string) => {
+  try {
+    const userCredential = await signInWithEmailAndPassword(auth, email, passwrod)
+    return userCredential.user
+  } catch(err) {
+    throw err
+  }
+}
 
 export const queryBuilder = () => {
   const colRef = collection(db, 'linked-tabs')
@@ -34,7 +44,7 @@ export const queryBuilder = () => {
 
   if (filters.withCapo) q = query(q, where('with_capo', '==', filters.withCapo))
   if (filters.difficulty) q = query(q, where('difficulty', '==', filters.difficulty))
-  if (filters.styles && filters.styles.length > 0) q = query(q, where('style', 'array-contains-any', filters.styles))
+  if (filters.styles && filters.styles.length > 0) q = query(q, where('style', '==', filters.styles))
 
   return q
 }

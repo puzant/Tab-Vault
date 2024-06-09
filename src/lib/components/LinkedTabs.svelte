@@ -36,7 +36,7 @@
 
   
   {#if confirmDeleteTab}
-   <DeleteLinkTabModal 
+    <DeleteLinkTabModal 
       onClose={toggleDeleteTabModal} 
       selectedTab={selectedTab} 
       on:deleteEvent={toggleDeleteTabModal} 
@@ -55,13 +55,11 @@
 
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { get } from 'svelte/store'
   import { filtersStore } from '$lib/filtersStore'
   import { onSnapshot } from 'firebase/firestore';
   import { queryBuilder, getLinkedTabs } from "$lib/firebase";
   import DeleteLinkTabModal from './DeleteLinkedTabModal.svelte'
   import EditLinkedTabModal from './EditLinkedTabModal.svelte'
-
 
   let selectedTab = null
   let linkedTabs: any = [];
