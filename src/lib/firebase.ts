@@ -1,8 +1,14 @@
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from 'firebase/auth';
 import { getFirestore, getDocs, addDoc, updateDoc, deleteDoc,collection, doc, query,where} from 'firebase/firestore';
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'firebase/auth';
 import { initializeApp } from "firebase/app";
 import { filtersStore } from './filtersStore';
 import { get } from 'svelte/store';
+
+const AuthErrorMessages = {
+ TOO_MANY_REQUESTS: 'Access to this account has been temporarily disabled due to many failed login attempts.', 
+ INVALID_CREDENTIALS: 'Email or Password is incorrect',
+ DEFAULT: 'An unknown error occurred. Please try again.'
+}
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -32,9 +38,26 @@ export const login = async (email: string, passwrod: string) => {
   try {
     const userCredential = await signInWithEmailAndPassword(auth, email, passwrod)
     return userCredential.user
-  } catch(err) {
-    throw err
+  } catch (err) {
+    const errorCode = err.code
+
+    switch (errorCode) {
+      case 'auth/too-many-requests':
+        return AuthErrorMessages.TOO_MANY_REQUESTS
+      case 'auth/invalid-credential':
+        return AuthErrorMessages.INVALID_CREDENTIALS
+      default: 
+        return AuthErrorMessages.DEFAULT
+    }
   }
+}
+
+export const logout = async () => {
+  try {
+    await signOut(auth)
+  } catch (err) {
+    throw err
+  } 
 }
 
 export const queryBuilder = () => {

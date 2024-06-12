@@ -53,7 +53,6 @@
 	import { difficultiesList, stylesList } from '$lib'
 	import { filtersStore } from '$lib/filtersStore';
 	import clsx from 'clsx'
-  import "../app.css";
 
 	const updateDifficultyFilter = (difficulty) => {
     filtersStore.update(filters => ({
