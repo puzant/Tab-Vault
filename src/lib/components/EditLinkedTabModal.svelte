@@ -61,7 +61,7 @@
   
         <div class="flex items-center gap-2 my-4">
           <span>With Capo:</span>
-          <input bind:checked={with_capo} type="checkbox" class="toggle toggle-info toggle-md" />
+          <input bind:checked={with_capo} type="checkbox" class="toggle toggle-primary toggle-md" />
         </div>
   
       </div>

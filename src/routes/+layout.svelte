@@ -1,11 +1,9 @@
 <div>
-	<nav class="bg-[#153448] text-white p-4 flex justify-between items-center">
+	<nav class="bg-primary text-white p-4 flex justify-between items-center">
 		<h1 class="text-2xl">Tab Vault</h1>
 
 		<div class="flex gap-8">
 			<a href="/">Home</a>
-			<a href="/">Chords</a>
-			<a href="/">Tuteriols</a>
 			{#if isAuthenticated}
 				<span on:click={logout}>Logout</span>
 			{:else} 
@@ -22,12 +20,10 @@
 		</div>
 	</nav>
 		
-	<div class={containerWidth}>
-		{#if isAuthenticated}
-			<Sidebar />
-		{/if}
+	<div class='grid grid-cols-12 mx-auto gap-4 w-full'>
+		<Sidebar />
 	
-		<div class={slotWidth}>
+		<div class='col-span-10'>
 			<slot></slot>
 		</div>
 	</div>
@@ -38,17 +34,7 @@
 	import { logout } from '$lib/firebase'
 	import { user } from '$lib/authStore'
 	import clsx from 'clsx';
-  import "../app.css";
+	import "../app.css";
 	
   $: isAuthenticated = $user !== null;
-
-	$: containerWidth = clsx('grid grid-cols-12 mx-auto gap-4', {
-		'w-full': !isAuthenticated,
-		'w-[80%]': isAuthenticated
-	})
-
-	$: slotWidth = clsx('', {
-		'col-span-12': !isAuthenticated,
-		'col-span-10': isAuthenticated
-	})
 </script>

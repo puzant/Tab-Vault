@@ -80,7 +80,7 @@
         <input bind:checked={with_capo} type="checkbox" class="toggle toggle-info toggle-md" />
       </div>
   
-      <button class="my-4 border bg-[#3C5B6F] text-white px-4 py-1.5 rounded-md flex items-center gap-1 w-fit">
+      <button class="my-4 border bg-primary text-white px-4 py-1.5 rounded-md flex items-center gap-1 w-fit">
         <img src="/images/plus.svg" alt="">
         <span>{loading ? 'Saving...' : 'Save'}</span>
       </button>

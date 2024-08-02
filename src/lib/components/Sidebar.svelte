@@ -25,8 +25,28 @@
       type="checkbox" 
       on:change={updateWithCapoFilter}
       checked={$filtersStore.withCapo} 
-      class="toggle toggle-info toggle-sm" 
+      class="toggle toggle-primary toggle-sm" 
     />
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="flex flex-col gap-2">
+    <div class="flex justify-between cursor-pointer">
+      <div class="flex items-center gap-1">
+        <img class="h-5" src="/images/star-unfilled.svg" alt="">
+        <span>Favorites</span>
+      </div>
+      <span>0</span>
+    </div>
+
+    <div class="flex justify-between cursor-pointer">
+      <div class="flex items-center gap-1">
+        <img class="h-5" src="/images/collection.svg" alt="">
+        <span>Collections</span>
+      </div>
+      <span>0</span>
+    </div>
   </div>
 
   <div class="divider"></div>
@@ -36,14 +56,14 @@
 
     <div class="my-2 flex gap-2 flex-wrap">
       {#each stylesList as style}
-        <span 
+        <div 
           on:click={() => updateStylesFilter(style)} 
           class={clsx("badge badge-primary badge-sm badge-outline cursor-pointer p-3", {
-            'selected': $filtersStore.styles === style
+            'bg-primary !text-white border border-primary': $filtersStore.styles === style
           })}
           >
           {style}
-        </span>
+        </div>
       {/each}
     </div>
   </div>

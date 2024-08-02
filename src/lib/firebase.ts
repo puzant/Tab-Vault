@@ -1,5 +1,5 @@
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from 'firebase/auth';
-import { getFirestore, getDocs, addDoc, updateDoc, deleteDoc,collection, doc, query,where} from 'firebase/firestore';
+import { getFirestore, getDocs, addDoc, updateDoc, deleteDoc, collection, doc, query,where} from 'firebase/firestore';
 import { initializeApp } from "firebase/app";
 import { filtersStore } from './filtersStore';
 import { get } from 'svelte/store';
@@ -92,6 +92,15 @@ export const addLinkedTab = async (payload) => {
 export const editLinkedTab = async (payload: any) => {
   try {
     await updateDoc(doc(db, 'linked-tabs', payload.id), payload)
+    return { success: true }
+  } catch(err) {
+    return { success: false }
+  }
+}
+
+export const toggleIsFavorite = async (tab) => {
+  try {
+    await updateDoc(doc(db, 'linked-tabs', tab.id), tab) 
     return { success: true }
   } catch(err) {
     return { success: false }

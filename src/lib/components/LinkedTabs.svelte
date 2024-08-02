@@ -17,15 +17,16 @@
             tabindex="0"
             on:mouseenter={() => handleMouseEnter(index)}
             on:mouseleave={() => handleMouseLeave(index)}
-            class="text-blue-500 flex gap-1 w-fit hover:transform hover:translate-x-2 transition-transform duration-300" 
+            class="text-primary flex gap-1 w-fit hover:transform hover:translate-x-2 transition-transform duration-300" 
             
           >
             <img src="/images/link.svg" alt="">
             <a href={tab.url} target="_blank">{tab.name}</a>
             
             <div class:visible={hoverStates[index]} class="tab-options">
-              <img on:click={() => toggleEditTabModal(tab)} class="inline cursor-pointer" src="/images/pencil.svg" alt="">
-              <img on:click={() => toggleDeleteTabModal(tab.id)} class="inline cursor-pointer" src="/images/trash.svg" alt="">
+              <img on:click={() => toggleEditTabModal(tab)} class="cursor-pointer h-5" src="/images/pencil.svg" alt="">
+              <img on:click={() => toggleDeleteTabModal(tab.id)} class="cursor-pointer h-5" src="/images/trash.svg" alt="">
+              <img on:click={() => toggleFavoriteStatus(tab)} class="cursor-pointer h-5" src="/images/star.svg" alt="">
             </div>
           </div>
         {/each}
@@ -57,10 +58,11 @@
   import { onMount } from 'svelte';
   import { filtersStore } from '$lib/filtersStore'
   import { onSnapshot } from 'firebase/firestore';
-  import { queryBuilder, getLinkedTabs } from "$lib/firebase";
+  import { queryBuilder, getLinkedTabs, db } from "$lib/firebase";
   import DeleteLinkTabModal from './DeleteLinkedTabModal.svelte'
   import EditLinkedTabModal from './EditLinkedTabModal.svelte'
 
+  
   let selectedTab = null
   let linkedTabs: any = [];
   let hoverStates: boolean[] = []
@@ -97,6 +99,10 @@
     if ($filtersStore) loadTabs();
   }
 
+  const handleToggleIsFavorite = async (tab) => {
+    toggleIsFavorite()
+  }
+
   const toggleDeleteTabModal = (tabId: string) => {
     selectedTab = tabId
     confirmDeleteTab = !confirmDeleteTab
@@ -120,6 +126,8 @@
   .tab-options {
     opacity: 0;
     transition: opacity ease 0.3s;
+    display: flex;
+    align-items: center;
   }
 
   .tab-options.visible {
